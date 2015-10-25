@@ -5,36 +5,20 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.common.registry.GameRegistry;
-import donslightningrod.blocks.BlockLightningBank;
-import donslightningrod.blocks.BlockLightningRod;
-import donslightningrod.blocks.GagLightningRod;
-import donslightningrod.tileentities.TileEntityLightningBank;
-import donslightningrod.tileentities.TileEntityLightningRod;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class CommonProxy{
-	public static final Block lightingRod = new BlockLightningRod();
-	public static final Block gagLightingRod = new GagLightningRod();
-	public static final Block lightningBank = new BlockLightningBank();
+	public static final Block lightningRod = new BlockLightningRod();
+	public static final Block gagLightningRod = new GagLightningRod();
 	public void init(){
-		GameRegistry.registerBlock(lightingRod, "LightningRod");
-		GameRegistry.registerBlock(gagLightingRod, "GagLightningRod");
-		GameRegistry.registerBlock(lightningBank, "LightningBank");
+		GameRegistry.registerBlock(lightningRod, "LightningRod");
+		GameRegistry.registerBlock(gagLightningRod, "GagLightningRod");
 		GameRegistry.registerTileEntity(TileEntityLightningRod.class, "Lightning Rod Tile Entity");
-		GameRegistry.registerTileEntity(TileEntityLightningBank.class, "Lightning Bank Tile Entity");
-		GameRegistry.addShapedRecipe(new ItemStack(Item.getItemFromBlock(lightingRod)),
+		GameRegistry.addShapedRecipe(new ItemStack(Item.getItemFromBlock(lightningRod)),
 		" A ",
 		" A ",
 		"ABA",
 		'A', new ItemStack(Items.iron_ingot), 'B', new ItemStack(Blocks.iron_block)
-		);
-		GameRegistry.addShapedRecipe(new ItemStack(Item.getItemFromBlock(lightningBank)),
-		" A ",
-		"CBC",
-		" C ",
-		'A', new ItemStack(lightingRod),
-		'B', new ItemStack(Blocks.iron_block),
-		'C', new ItemStack(Items.redstone)
 		);
 	}
 }

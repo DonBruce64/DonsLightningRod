@@ -1,0 +1,13 @@
+{
+    "parent": "dlr:block/LightningRod",
+    "display": {
+        "thirdperson": {
+            "rotation": [ 10, -45, 170 ],
+            "translation": [ 0, 0, -2.0 ],
+            "scale": [ 0.375, 0.375, 0.375 ]
+        },
+         "gui": {
+            "translation": [ 0, -3.0, 0 ]
+        }
+    }
+}
