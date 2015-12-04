@@ -38,7 +38,6 @@ public class TileEntityLightningRod extends TileEntity{
 						if(worldObj.weatherEffects.get(i) instanceof EntityLightningBolt){
 							EntityLightningBolt bolt=(EntityLightningBolt) worldObj.weatherEffects.get(i);
 							if(bolt.boundingBox.intersectsWith(worldObj.getBlock(xCoord, yCoord, zCoord).getCollisionBoundingBoxFromPool(worldObj, xCoord, yCoord - j, zCoord).expand(j, 0, j))){
-								System.out.println(bolt.boundingBox.minY+"  "+bolt.boundingBox.maxY+"  "+worldObj.weatherEffects.size());
 								worldObj.addWeatherEffect(new EntityLightningBolt(worldObj, xCoord, yCoord+1, zCoord));
 								if(connectedBank != null){
 									timeSinceLastBolt=0;
