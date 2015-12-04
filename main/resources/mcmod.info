@@ -1,0 +1,16 @@
+[
+{
+  "modid": "dlr",
+  "name": "Don's Lightning Rod",
+  "description": "Working lightning rods for Minecraft!",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["ExampleDude"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
