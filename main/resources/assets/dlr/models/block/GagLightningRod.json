@@ -1,0 +1,6 @@
+{
+    "textures": {
+        "texture": "blocks/iron_block",
+        "particle": "blocks/iron_block"
+    }
+}

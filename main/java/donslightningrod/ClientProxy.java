@@ -8,5 +8,6 @@ public class ClientProxy extends CommonProxy{
 	public void init(){
 		super.init();
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(lightningRod), 0, new ModelResourceLocation("dlr:LightningRod", "inventory"));
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(lightningBank), 0, new ModelResourceLocation("dlr:LightningBank", "inventory"));
 	}
 }
