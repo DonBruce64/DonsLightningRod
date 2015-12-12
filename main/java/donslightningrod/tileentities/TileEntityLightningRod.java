@@ -7,8 +7,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import donslightningrod.blocks.BlockLightningBank;
+import donslightningrod.blocks.BlockLightningRod;
 
 public class TileEntityLightningRod extends TileEntity{
+	private static long lastCaughtStrikeTime;
+	
 	private int rodHeight;
 	private long timeSinceLastBolt;
 	private TileEntityLightningBank connectedBank;
@@ -16,40 +19,35 @@ public class TileEntityLightningRod extends TileEntity{
 	@Override
 	public void updateEntity(){
 		super.updateEntity();
-		if(!worldObj.isRemote){
+		if(!worldObj.isRemote){			
 			if(worldObj.getWorldTime()%10 == 0){
 				refreshRodHeight();
 			}
 			
 			if(connectedBank != null  && worldObj.isThundering()){
 				if(connectedBank.poweringRod){
-					if(timeSinceLastBolt-(100*(256-rodHeight))>0){
+					if(++timeSinceLastBolt-(100*(256-rodHeight))>0){
 						worldObj.addWeatherEffect(new EntityLightningBolt(worldObj, xCoord, yCoord+1, zCoord));
 						timeSinceLastBolt=0;
-					}else{
-						++timeSinceLastBolt;
 					}
 				}
 			}
 			
 			if(worldObj.weatherEffects.size()>0){
 				for(int i=0; i<worldObj.weatherEffects.size(); ++i){
-					for(int j=1; j<rodHeight; ++j){
-						if(worldObj.weatherEffects.get(i) instanceof EntityLightningBolt){
-							EntityLightningBolt bolt=(EntityLightningBolt) worldObj.weatherEffects.get(i);
-							if(bolt.boundingBox.intersectsWith(worldObj.getBlock(xCoord, yCoord, zCoord).getCollisionBoundingBoxFromPool(worldObj, xCoord, yCoord - j, zCoord).expand(j, 0, j))){
-								worldObj.addWeatherEffect(new EntityLightningBolt(worldObj, xCoord, yCoord+1, zCoord));
-								if(connectedBank != null){
-									timeSinceLastBolt=0;
-									if(connectedBank.receiveEnergy(null, 5000, false)<1000){
-										worldObj.removeTileEntity(connectedBank.xCoord, connectedBank.yCoord, connectedBank.zCoord);
-										worldObj.createExplosion(null, connectedBank.xCoord, connectedBank.yCoord, connectedBank.zCoord, 1.0F, true);
-										worldObj.addWeatherEffect(new EntityLightningBolt(worldObj, connectedBank.xCoord, connectedBank.yCoord, connectedBank.zCoord));
-									}
+					if(worldObj.weatherEffects.get(i) instanceof EntityLightningBolt){
+						EntityLightningBolt bolt=(EntityLightningBolt) worldObj.weatherEffects.get(i);
+						double yDist = this.yCoord - bolt.posY;
+						System.out.format("Effects:%d DistY:%f DistX:%f DistZ:%f\n", worldObj.weatherEffects.size(), yDist, Math.abs(this.xCoord - bolt.posX), Math.abs(this.zCoord - bolt.posZ));
+						if(yDist <= rodHeight && yDist > 0 && Math.abs(this.xCoord - bolt.posX) <= yDist && Math.abs(this.zCoord - bolt.posZ) <= yDist){
+							if(!(worldObj.getBlock((int) bolt.posX, (int) bolt.posY - 1, (int) bolt.posZ) instanceof BlockLightningRod)){
+								if(lastCaughtStrikeTime != worldObj.getTotalWorldTime()){
+									lastCaughtStrikeTime = worldObj.getTotalWorldTime();
+									spawnRodStrike();
+									extinguishFire(bolt);
+									bolt.setDead();
+									return;
 								}
-								extinguishFire(bolt);
-								bolt.setDead();
-								return;
 							}
 						}
 					}
@@ -58,15 +56,28 @@ public class TileEntityLightningRod extends TileEntity{
 		}
 	}
 	
+	
 	private void extinguishFire(EntityLightningBolt bolt){
-		for(int j=-2; j<=2; ++j){
-			for(int k=-2; k<=2; ++k){
-				for(int l=-2; l<=2; ++l){
-					if(worldObj.getBlock(MathHelper.floor_double(bolt.posX)+j, MathHelper.floor_double(bolt.posY)+k, MathHelper.floor_double(bolt.posZ)+l).equals(Blocks.fire)){
-						worldObj.setBlockToAir(MathHelper.floor_double(bolt.posX)+j, MathHelper.floor_double(bolt.posY)+k, MathHelper.floor_double(bolt.posZ)+l);
+		for(int i=-2; i<=2; ++i){
+			for(int j=-2; j<=2; ++j){
+				for(int k=-2; k<=2; ++k){
+					if(worldObj.getBlock(MathHelper.floor_double(bolt.posX)+i, MathHelper.floor_double(bolt.posY)+j, MathHelper.floor_double(bolt.posZ)+k).equals(Blocks.fire)){
+						worldObj.setBlockToAir(MathHelper.floor_double(bolt.posX)+i, MathHelper.floor_double(bolt.posY)+j, MathHelper.floor_double(bolt.posZ)+k);
 					}
 				}
 			}	
+		}
+	}
+	
+	private void spawnRodStrike(){
+		worldObj.addWeatherEffect(new EntityLightningBolt(worldObj, xCoord, yCoord+1, zCoord));
+		if(connectedBank != null){
+			timeSinceLastBolt=0;
+			if(connectedBank.receiveEnergy(null, 5000, false)<1000){
+				worldObj.removeTileEntity(connectedBank.xCoord, connectedBank.yCoord, connectedBank.zCoord);
+				worldObj.createExplosion(null, connectedBank.xCoord, connectedBank.yCoord, connectedBank.zCoord, 1.0F, true);
+				worldObj.addWeatherEffect(new EntityLightningBolt(worldObj, connectedBank.xCoord, connectedBank.yCoord, connectedBank.zCoord));
+			}
 		}
 	}
 	

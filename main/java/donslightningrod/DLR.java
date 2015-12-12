@@ -10,7 +10,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 public class DLR{
 	public static final String MODID="dlr";
 	public static final String MODNAME="Don's Lightning Rod";
-	public static final String MODVER="2.3.1";
+	public static final String MODVER="2.3.2";
 	
 	@Instance(value = DLR.MODID)
 	public static DLR instance;
