@@ -38,7 +38,6 @@ public class TileEntityLightningRod extends TileEntity{
 					if(worldObj.weatherEffects.get(i) instanceof EntityLightningBolt){
 						EntityLightningBolt bolt=(EntityLightningBolt) worldObj.weatherEffects.get(i);
 						double yDist = this.yCoord - bolt.posY;
-						System.out.format("Effects:%d DistY:%f DistX:%f DistZ:%f\n", worldObj.weatherEffects.size(), yDist, Math.abs(this.xCoord - bolt.posX), Math.abs(this.zCoord - bolt.posZ));
 						if(yDist <= rodHeight && yDist > 0 && Math.abs(this.xCoord - bolt.posX) <= yDist && Math.abs(this.zCoord - bolt.posZ) <= yDist){
 							if(!(worldObj.getBlock((int) bolt.posX, (int) bolt.posY - 1, (int) bolt.posZ) instanceof BlockLightningRod)){
 								if(lastCaughtStrikeTime != worldObj.getTotalWorldTime()){
