@@ -3,7 +3,7 @@
   "modid": "dlr",
   "name": "Don's Lightning Rod",
   "description": "Working lightning rods for Minecraft!",
-  "version": "2.3.0",
+  "version": "2.3.2",
   "mcversion": "${mcversion}",
   "url": "http://minecraft.curseforge.com/projects/dons-lightning-rod-mod",
   "updateUrl": "",
