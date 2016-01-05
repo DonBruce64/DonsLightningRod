@@ -6,6 +6,7 @@ import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
+import donslightningrod.DLR;
 import donslightningrod.blocks.BlockLightningBank;
 import donslightningrod.blocks.BlockLightningRod;
 
@@ -72,10 +73,11 @@ public class TileEntityLightningRod extends TileEntity{
 		worldObj.addWeatherEffect(new EntityLightningBolt(worldObj, xCoord, yCoord+1, zCoord));
 		if(connectedBank != null){
 			timeSinceLastBolt=0;
-			if(connectedBank.receiveEnergy(null, 5000, false)<1000){
+			if(connectedBank.receiveEnergy(null, DLR.lightningStikePower, false) - DLR.lightningStikePower < -DLR.lightningStikePower/10F){
 				worldObj.removeTileEntity(connectedBank.xCoord, connectedBank.yCoord, connectedBank.zCoord);
 				worldObj.createExplosion(null, connectedBank.xCoord, connectedBank.yCoord, connectedBank.zCoord, 1.0F, true);
 				worldObj.addWeatherEffect(new EntityLightningBolt(worldObj, connectedBank.xCoord, connectedBank.yCoord, connectedBank.zCoord));
+				connectedBank = null;
 			}
 		}
 	}

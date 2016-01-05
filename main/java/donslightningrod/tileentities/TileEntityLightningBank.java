@@ -1,8 +1,11 @@
 package donslightningrod.tileentities;
 
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.energy.EnergyStorage;
+import cofh.api.energy.IEnergyReceiver;
 import cofh.api.energy.TileEnergyHandler;
+import donslightningrod.DLR;
 
 public class TileEntityLightningBank extends TileEnergyHandler {
 	private int activeTimer=0;
@@ -10,7 +13,7 @@ public class TileEntityLightningBank extends TileEnergyHandler {
 	public boolean poweringRod=false;
 	
 	public TileEntityLightningBank(){
-		this.storage=new EnergyStorage(15000, 5000, 100);
+		this.storage=new EnergyStorage(DLR.bankBlockCapacity, DLR.lightningStikePower, DLR.bankBlockMaxExtraction);
 	}
 	
 	@Override
@@ -21,6 +24,18 @@ public class TileEntityLightningBank extends TileEnergyHandler {
 			poweringRod=false;
 		}
 		hasPower=false;
+		for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS){
+			if(!direction.equals(ForgeDirection.DOWN) && !direction.equals(ForgeDirection.UP)){
+				TileEntity test = worldObj.getTileEntity(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ);
+				if(test instanceof IEnergyReceiver){
+					IEnergyReceiver connector = (IEnergyReceiver) test;
+					if(connector.canConnectEnergy(direction)){
+						connector.receiveEnergy(direction, storage.extractEnergy(storage.getMaxExtract(), false), false);
+						return;
+					}
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -38,17 +53,21 @@ public class TileEntityLightningBank extends TileEnergyHandler {
 		if(from==null){
 			return this.storage.receiveEnergy(maxReceive, false);
 		}else if(!worldObj.isRemote && from.equals(ForgeDirection.DOWN)){
-			hasPower=true;
 			if(activeTimer==0){
-				if(!simulate){activeTimer=10;}
-				return 1;
+				if(!simulate){
+					activeTimer=DLR.bankBlockPowerConsumptionCooldown;
+					if(maxReceive < DLR.bankBlockPowerConsumption){
+						hasPower = false;
+					}else{
+						hasPower = true;
+						return DLR.bankBlockPowerConsumption;
+					}
+				}
 			}else{
 				activeTimer--;
-				return 0;
 			}
-		}else{
-			return 0;
 		}
+		return 0;
 	}
 
 	@Override
@@ -59,15 +78,4 @@ public class TileEntityLightningBank extends TileEnergyHandler {
 			return this.storage.extractEnergy(maxExtract, simulate);
 		}
 	}
-
-	@Override
-	public int getEnergyStored(ForgeDirection from){
-		return this.storage.getEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored(ForgeDirection from){
-		return this.storage.getMaxEnergyStored();
-	}
-
 }
