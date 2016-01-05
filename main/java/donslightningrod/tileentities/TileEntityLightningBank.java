@@ -1,9 +1,12 @@
 package donslightningrod.tileentities;
 
 import net.minecraft.server.gui.IUpdatePlayerListBox;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import cofh.api.energy.EnergyStorage;
+import cofh.api.energy.IEnergyReceiver;
 import cofh.api.energy.TileEnergyHandler;
+import donslightningrod.DLR;
 
 public class TileEntityLightningBank extends TileEnergyHandler implements IUpdatePlayerListBox{
 	private int activeTimer=0;
@@ -11,7 +14,7 @@ public class TileEntityLightningBank extends TileEnergyHandler implements IUpdat
 	public boolean poweringRod=false;
 	
 	public TileEntityLightningBank(){
-		this.storage=new EnergyStorage(15000, 5000, 100);
+		this.storage=new EnergyStorage(DLR.bankBlockCapacity, DLR.lightningStikePower, DLR.bankBlockMaxExtraction);
 	}
 	
 	@Override
@@ -22,6 +25,18 @@ public class TileEntityLightningBank extends TileEnergyHandler implements IUpdat
 			poweringRod=false;
 		}
 		hasPower=false;
+		for(EnumFacing facing : EnumFacing.VALUES){
+			if(!facing.equals(EnumFacing.DOWN) && !facing.equals(EnumFacing.UP)){
+				TileEntity test = worldObj.getTileEntity(this.pos.offset(facing));
+				if(test instanceof IEnergyReceiver){
+					IEnergyReceiver connector = (IEnergyReceiver) test;
+					if(connector.canConnectEnergy(facing)){
+						connector.receiveEnergy(facing, storage.extractEnergy(storage.getMaxExtract(), false), false);
+						return;
+					}
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -39,17 +54,21 @@ public class TileEntityLightningBank extends TileEnergyHandler implements IUpdat
 		if(facing==null){
 			return this.storage.receiveEnergy(maxReceive, false);
 		}else if(!worldObj.isRemote && facing.equals(EnumFacing.DOWN)){
-			hasPower=true;
 			if(activeTimer==0){
-				if(!simulate){activeTimer=10;}
-				return 1;
+				if(!simulate){
+					activeTimer=DLR.bankBlockPowerConsumptionCooldown;
+					if(maxReceive < DLR.bankBlockPowerConsumption){
+						hasPower = false;
+					}else{
+						hasPower = true;
+						return DLR.bankBlockPowerConsumption;
+					}
+				}
 			}else{
 				activeTimer--;
-				return 0;
 			}
-		}else{
-			return 0;
 		}
+		return 0;
 	}
 
 	@Override

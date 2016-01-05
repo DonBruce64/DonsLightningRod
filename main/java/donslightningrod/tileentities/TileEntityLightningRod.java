@@ -8,6 +8,7 @@ import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
+import donslightningrod.DLR;
 import donslightningrod.blocks.BlockLightningBank;
 import donslightningrod.blocks.BlockLightningRod;
 
@@ -72,7 +73,7 @@ public class TileEntityLightningRod extends TileEntity  implements IUpdatePlayer
 		worldObj.addWeatherEffect(new EntityLightningBolt(worldObj, pos.getX(), pos.getY()+1, pos.getZ()));
 		if(connectedBank != null){
 			timeSinceLastBolt=0;
-			if(connectedBank.receiveEnergy(null, 5000, false)<1000){
+			if(connectedBank.receiveEnergy(null, DLR.lightningStikePower, false) - DLR.lightningStikePower < -DLR.lightningStikePower/10F){
 				worldObj.removeTileEntity(connectedBank.getPos());
 				worldObj.createExplosion(null, connectedBank.getPos().getX(), connectedBank.getPos().getY(), connectedBank.getPos().getZ(), 1.0F, true);
 				worldObj.addWeatherEffect(new EntityLightningBolt(worldObj, connectedBank.getPos().getX(), connectedBank.getPos().getY(), connectedBank.getPos().getZ()));
