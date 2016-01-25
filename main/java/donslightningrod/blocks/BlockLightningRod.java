@@ -1,7 +1,6 @@
 package donslightningrod.blocks;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -14,7 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import donslightningrod.DLR;
 import donslightningrod.tileentities.TileEntityLightningRod;
 
-public class BlockLightningRod extends BlockContainer implements ITileEntityProvider{
+public class BlockLightningRod extends Block implements ITileEntityProvider{
 	private IIcon icon;
 	
 	public BlockLightningRod(){
