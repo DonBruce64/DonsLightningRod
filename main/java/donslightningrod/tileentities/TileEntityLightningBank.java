@@ -1,14 +1,14 @@
 package donslightningrod.tileentities;
 
-import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import cofh.api.energy.TileEnergyHandler;
 import donslightningrod.DLR;
 
-public class TileEntityLightningBank extends TileEnergyHandler implements IUpdatePlayerListBox{
+public class TileEntityLightningBank extends TileEnergyHandler implements ITickable{
 	private int activeTimer=0;
 	private boolean hasPower=false;
 	public boolean poweringRod=false;

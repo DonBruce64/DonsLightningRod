@@ -4,15 +4,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.init.Blocks;
-import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.MathHelper;
 import donslightningrod.DLR;
 import donslightningrod.blocks.BlockLightningBank;
 import donslightningrod.blocks.BlockLightningRod;
 
-public class TileEntityLightningRod extends TileEntity  implements IUpdatePlayerListBox{	
+public class TileEntityLightningRod extends TileEntity  implements ITickable{	
 	private static long lastCaughtStrikeTime;
 	
 	private int rodHeight;
