@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class DLR{
 	public static final String MODID="dlr";
 	public static final String MODNAME="Don's Lightning Rod";
-	public static final String MODVER="2.4.0";
+	public static final String MODVER="2.4.1";
 	
 	public static int lightningStikePower;
 	public static int bankBlockCapacity;

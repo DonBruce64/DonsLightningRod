@@ -30,8 +30,8 @@ public class TileEntityLightningBank extends TileEnergyHandler implements ITicka
 				TileEntity test = worldObj.getTileEntity(this.pos.offset(facing));
 				if(test instanceof IEnergyReceiver){
 					IEnergyReceiver connector = (IEnergyReceiver) test;
-					if(connector.canConnectEnergy(facing)){
-						connector.receiveEnergy(facing, storage.extractEnergy(storage.getMaxExtract(), false), false);
+					if(connector.canConnectEnergy(facing.getOpposite())){
+						connector.receiveEnergy(facing.getOpposite(), storage.extractEnergy(storage.getMaxExtract(), false), false);
 						return;
 					}
 				}
