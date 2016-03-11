@@ -61,8 +61,9 @@ public class TileEntityLightningRod extends TileEntity  implements ITickable{
 		for(int i=-2; i<=2; ++i){
 			for(int j=-2; j<=2; ++j){
 				for(int k=-2; k<=2; ++k){
-					if(worldObj.getChunkFromBlockCoords(pos).getBlock(MathHelper.floor_double(bolt.posX)+i, MathHelper.floor_double(bolt.posY)+j, MathHelper.floor_double(bolt.posZ)+k).equals(Blocks.fire)){
-						worldObj.setBlockToAir(new BlockPos(MathHelper.floor_double(bolt.posX)+i, MathHelper.floor_double(bolt.posY)+j, MathHelper.floor_double(bolt.posZ)+k));
+					BlockPos posToCheck = new BlockPos(MathHelper.floor_double(bolt.posX)+i, MathHelper.floor_double(bolt.posY)+j, MathHelper.floor_double(bolt.posZ)+k);
+					if(worldObj.getChunkFromBlockCoords(posToCheck).getBlock(posToCheck).equals(Blocks.fire)){
+						worldObj.setBlockToAir(posToCheck);
 					}
 				}
 			}	
